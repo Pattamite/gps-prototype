@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class GpsTester : MonoBehaviour 
 {
 	public Text GpsStatus;
+	public Text UpdateDis;
 	public Text Altitude;
 	public Text Latitude;
 	public Text Longtitude;
@@ -12,15 +13,18 @@ public class GpsTester : MonoBehaviour
 	public Text VertAcc;
 	public Text TimeStamp;
 	public Text MainStatus;
+	public static float UpdateDistance = 10f;
 	
 	private enum State {User_off, User_on, Ini, On};
 	private State current;
 	private bool isRunning;
+	private bool isUpdating;
 
 	// Use this for initialization
 	void Start () 
 	{
 		isRunning = false;
+		isUpdating = false;
 		current = State.User_off;
 		print ("" + Input.location.isEnabledByUser);
 	}
@@ -28,7 +32,8 @@ public class GpsTester : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{	
-		if(!isRunning)
+		UpdateDis.text = UpdateDistance + " m";
+		if(!isRunning && !isUpdating)
 		{
 			isRunning = true;
 			if(current == State.User_off) UserOff();
@@ -59,7 +64,7 @@ public class GpsTester : MonoBehaviour
 	void UserOn_1()
 	{
 		print("UserOn_1");
-		Input.location.Start();
+		Input.location.Start(UpdateDistance, UpdateDistance);
 		current = State.Ini;
 		isRunning = false;
 	}
@@ -121,5 +126,16 @@ public class GpsTester : MonoBehaviour
 			current = State.User_off;
 			isRunning = false;
 		}
+	}
+	
+	public void Update(float value)
+	{
+		isUpdating = true;
+		UpdateDistance = value;
+		current = State.User_off;
+		Input.location.Stop();
+		isUpdating = false;
+		isRunning = false;
+		
 	}
 }
