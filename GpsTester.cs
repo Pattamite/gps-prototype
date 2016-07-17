@@ -49,7 +49,7 @@ public class GpsTester : MonoBehaviour
 		print("UserOff");
 		MainStatus.text = "Location service is off.\n" + "Please open it.";
 		GpsStatus.text = "Off";
-		if(Input.location.isEnabledByUser) current = State.User_on;
+		if(Input.location.isEnabledByUser == true) current = State.User_on;
 		isRunning = false;
 	}
 	
